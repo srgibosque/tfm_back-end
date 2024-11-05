@@ -1,8 +1,7 @@
 const Sequelize = require('sequelize');
-
 const sequelize = require('../util/databse');
 
-const User = sequelize.define('user', {
+const League = sequelize.define('league', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -13,23 +12,10 @@ const User = sequelize.define('user', {
     type: Sequelize.STRING,
     allowNull: false
   },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
-  },
-  password: {
+  location: {
     type: Sequelize.STRING,
     allowNull: false
-  },
-  gender: {
-    type: Sequelize.ENUM('male', 'female'),
-    allowNull: false
-  },
-  birthdate: {
-    type: Sequelize.DATE,
-    allowNull: true
   }
 });
 
-module.exports = User;
+module.exports = League;

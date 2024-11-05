@@ -1,8 +1,7 @@
 const Sequelize = require('sequelize');
-
 const sequelize = require('../util/databse');
 
-const User = sequelize.define('user', {
+const Team = sequelize.define('team', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -13,23 +12,19 @@ const User = sequelize.define('user', {
     type: Sequelize.STRING,
     allowNull: false
   },
-  email: {
+  contact_email: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  location: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  userteamname: {
     type: Sequelize.STRING,
     allowNull: false,
     unique: true
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  gender: {
-    type: Sequelize.ENUM('male', 'female'),
-    allowNull: false
-  },
-  birthdate: {
-    type: Sequelize.DATE,
-    allowNull: true
   }
 });
 
-module.exports = User;
+module.exports = Team;

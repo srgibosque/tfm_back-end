@@ -2,7 +2,12 @@ const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize = require('./util/databse');
+
+//Models
 const User = require('./models/user');
+const Team = require('./models/team');
+const League = require('./models/league');
+const Match = require('./models/match');
 
 const app = express();
 
@@ -25,6 +30,24 @@ app.use((error, req, res, next) => {
   const data = error.data;
   res.status(status).json({ message: message, data: data });
 });
+
+//Data relation
+User.belongsToMany(Team, { through: 'UserTeams' });
+Team.belongsToMany(User, { through: 'UserTeams' });
+
+Team.belongsToMany(League, { through: 'TeamLeagues' });
+League.belongsToMany(Team, { through: 'TeamLeagues' });
+
+League.hasMany(Match, { foreignKey: 'leagueId' });
+Match.belongsTo(League, { foreignKey: 'leagueId' });
+
+// Team participates in many matches as either home or away team
+Team.hasMany(Match, { foreignKey: 'homeTeamId', as: 'HomeMatches' });
+Team.hasMany(Match, { foreignKey: 'awayTeamId', as: 'AwayMatches' });
+
+// Each match has two teams (home and away), both belonging to the same league
+Match.belongsTo(Team, { foreignKey: 'homeTeamId', as: 'HomeTeam' });
+Match.belongsTo(Team, { foreignKey: 'awayTeamId', as: 'AwayTeam' });
 
 //Creates tables for your models
 sequelize
