@@ -1,13 +1,17 @@
+//IMPORTS
 const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize = require('./util/databse');
 
-//Models
+//MODELS
 const User = require('./models/user');
 const Team = require('./models/team');
 const League = require('./models/league');
 const Match = require('./models/match');
+
+//ROUTES
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -22,6 +26,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// ROUTES middleware
+app.use('/auth', authRoutes);
+
 // Middleware error. Executes every time an error is thrown
 app.use((error, req, res, next) => {
   console.log(error);
@@ -31,7 +38,7 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
-//Data relation
+//DATA RELATION
 User.belongsToMany(Team, { through: 'UserTeams' });
 Team.belongsToMany(User, { through: 'UserTeams' });
 
