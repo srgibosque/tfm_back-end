@@ -1,11 +1,8 @@
 const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-
-const MONGODB_URL = 'mongodb+srv://sergibosquerodenas:embmVWcvqeHbBvNT@clustertfm.y63dr.mongodb.net/?retryWrites=true&w=majority&appName=ClusterTFM';
-const db_username = 'sergibosquerodenas';
-const db_password = 'embmVWcvqeHbBvNT';
+const sequelize = require('./util/databse');
+const User = require('./models/user');
 
 const app = express();
 
@@ -29,11 +26,16 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
-mongoose
-  .connect(MONGODB_URL)
+//Creates tables for your models
+sequelize
+  .sync({ alter: true })
   .then(result => {
-    console.log('Connected!');
+    console.log("Connected");
     app.listen(8080);
   })
-  .catch(err => console.error(err));
+  .catch(err => {
+    console.error(err)
+  });
+
+
 
