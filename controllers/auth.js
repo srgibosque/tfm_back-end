@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { ValidationError } = require('sequelize');
 
 exports.signup = (req, res, next) => {
@@ -37,3 +38,53 @@ exports.signup = (req, res, next) => {
       next(err);
     });
 };
+
+exports.signin = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  let loadedUser;
+
+  User.findOne({ where: { email: email } })
+    .then((user) => {
+      // Check if the user exists in the DB
+      if (!user) {
+        const error = new Error('A user with this email could not be found.');
+        error.status = 401;
+        throw error;
+      }
+      loadedUser = user;
+      //Compare the password extracted from the body with the hashed password
+      return bcrypt.compare(password, user.password)
+    })
+    .then((isMatch) => {
+      // Check if the password matches
+      if (!isMatch) {
+        const error = new Error('Incorrect password');
+        error.status = 401;
+        throw error;
+      }
+      //Generate JWT
+      const token = jwt.sign({
+        userId: loadedUser.id,
+        email: loadedUser.email
+      },
+        'secret',
+        { expiresIn: '1h' }
+      );
+      // Return the token to the client
+      res.status(200).json({
+        token: token,
+        userId: loadedUser.id,
+      })
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+}
+
+exports.signout = (req, res, next) => {
+
+}
