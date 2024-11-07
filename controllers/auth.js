@@ -2,6 +2,7 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { ValidationError } = require('sequelize');
+const handleError = require('../util/error-handler');
 
 exports.signup = (req, res, next) => {
   const email = req.body.email;
@@ -32,10 +33,7 @@ exports.signup = (req, res, next) => {
           });
         }
       }
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+      handleError(err, next);
     });
 };
 
@@ -68,7 +66,7 @@ exports.signin = (req, res, next) => {
         userId: loadedUser.id,
         email: loadedUser.email
       },
-        'secret',
+        process.env.JWT_SECRET,
         { expiresIn: '1h' }
       );
       // Return the token to the client
@@ -77,12 +75,7 @@ exports.signin = (req, res, next) => {
         userId: loadedUser.id,
       })
     })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+    .catch((err) => handleError(err, next));
 }
 
 exports.signout = (req, res, next) => {

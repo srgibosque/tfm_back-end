@@ -1,6 +1,7 @@
 //IMPORTS
 const http = require('http');
 const express = require('express');
+require('dotenv').config();
 const bodyParser = require('body-parser');
 const sequelize = require('./util/databse');
 
