@@ -77,7 +77,3 @@ exports.signin = (req, res, next) => {
     })
     .catch((err) => handleError(err, next));
 }
-
-exports.signout = (req, res, next) => {
-
-}

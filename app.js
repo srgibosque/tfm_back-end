@@ -13,6 +13,7 @@ const Match = require('./models/match');
 
 //ROUTES
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 
 // ROUTES middleware
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 
 // Middleware error. Executes every time an error is thrown
 app.use((error, req, res, next) => {
