@@ -1,8 +1,8 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { ValidationError } = require('sequelize');
 const handleError = require('../util/error-handler');
+const duplicateUniqueValuesError = require('../util/duplicate-unique-values_error-handler');
 
 exports.signup = (req, res, next) => {
   const email = req.body.email;
@@ -26,12 +26,8 @@ exports.signup = (req, res, next) => {
       })
     })
     .catch((err) => {
-      if (err instanceof ValidationError) {
-        if (err.errors.some(error => error.path === 'email')) {
-          return res.status(409).json({
-            message: 'Email already in use. Please use a different email.'
-          });
-        }
+      if (duplicateUniqueValuesError(err, 'email', res, 'Email already in use, please use a different email')) {
+        return;
       }
       handleError(err, next);
     });

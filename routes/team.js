@@ -4,5 +4,10 @@ const teamController = require('../controllers/team')
 const isAuth = require('../middleware/is-auth');
 const router = express.Router();
 
-//This way only authenticated users can access the routes
-// router.get('routeexample', isAuth, teamController.exampleFunction);
+
+router.post('/', isAuth, teamController.createTeam);
+router.get('/player/:email', isAuth, teamController.getPlayerByEmail);
+router.put('/:teamId', isAuth, teamController.updateTeam);
+router.get('/:teamId', isAuth, teamController.getTeam);
+
+module.exports = router;
