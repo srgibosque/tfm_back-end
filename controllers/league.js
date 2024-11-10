@@ -80,15 +80,41 @@ exports.getTeamByTeamname = async (req, res, next) => {
   }
 };
 
-exports.updateLeague = async (req, res, next) => {
-
-};
-
 exports.getLeague = async (req, res, next) => {
+  const leagueId = req.params.leagueId;
 
+  try {
+    const league = await League.findByPk(leagueId, {
+      include: [
+        {
+          model: Match,
+          as: 'Matches',
+          include: [
+            { model: Team, as: 'HomeTeam', attributes: ['id', 'name'] },
+            { model: Team, as: 'AwayTeam', attributes: ['id', 'name'] }
+          ]
+        }
+      ]
+    });
+
+    if (!league) {
+      const error = new Error('League not found');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    res.status(200).json({
+      message: 'League retrieved successfully',
+      league: league
+    });
+
+  } catch (err) {
+    handleError(err, next);
+  }
 };
 
 exports.deleteLeague = async (req, res, next) => {
+  // Make sure it deletes the matches associated with the league
   const leagueId = req.params.leagueId;
   try {
     const league = await League.findByPk(leagueId);

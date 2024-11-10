@@ -54,7 +54,7 @@ Team.belongsToMany(User, { through: 'UserTeams', as: 'Users' });
 Team.belongsToMany(League, { through: 'TeamLeagues' });
 League.belongsToMany(Team, { through: 'TeamLeagues' });
 
-League.hasMany(Match, { foreignKey: 'leagueId' });
+League.hasMany(Match, { foreignKey: 'leagueId',  as: 'Matches' });
 Match.belongsTo(League, { foreignKey: 'leagueId' });
 
 // Team participates in many matches as either home or away team
