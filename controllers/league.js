@@ -5,7 +5,61 @@ const handleError = require('../util/error-handler');
 const duplicateUniqueValuesError = require('../util/duplicate-unique-values_error-handler');
 
 exports.createLeague = async (req, res, next) => {
+  const { name, location, teamIds } = req.body;
+  try {
+    const createdLeague = await League.create({
+      name: name,
+      location: location,
+    });
 
+    const teams = await Team.findAll({ where: { id: teamIds } });
+
+    if (teams.length < 2) {
+      const error = new Error('League should have at least two teams');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    await createdLeague.addTeams(teams);
+
+    const matches = [];
+    for (let i = 0; i < teams.length; i++) {
+      for (let j = i + 1; j < teams.length; j++) {
+        const team1 = teams[i];
+        const team2 = teams[j];
+
+        // Create both a home and an away match for each team pair
+        matches.push({
+          homeTeamId: team1.id,
+          awayTeamId: team2.id,
+          leagueId: createdLeague.id,
+          date: null,
+          location: null,
+          homeTeamGoals: null,
+          awayTeamGoals: null
+        });
+        matches.push({
+          homeTeamId: team2.id,
+          awayTeamId: team1.id,
+          leagueId: createdLeague.id,
+          date: null,
+          location: null,
+          homeTeamGoals: null,
+          awayTeamGoals: null
+        });
+      }
+    }
+
+    await Match.bulkCreate(matches);
+
+    res.status(201).json({
+      message: 'League created successfully',
+      league: createdLeague,
+      matches: matches
+    });
+  } catch (err) {
+    handleError(err, next);
+  }
 };
 
 exports.getTeamByTeamname = async (req, res, next) => {
@@ -17,7 +71,7 @@ exports.getTeamByTeamname = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    res.status(200).json({ 
+    res.status(200).json({
       message: 'Team successfully loaded to league',
       team: team
     });
