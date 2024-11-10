@@ -55,7 +55,7 @@ exports.getPlayerByEmail = async (req, res, next) => {
   } catch (err) {
     handleError(err, next);
   }
-}
+};
 
 exports.updateTeam = async (req, res, next) => {
   const teamId = req.params.teamId;
@@ -84,7 +84,7 @@ exports.updateTeam = async (req, res, next) => {
   catch (err) {
     handleError(err, next);
   }
-}
+};
 
 exports.getTeam = async (req, res, next) => {
   const teamId = req.params.teamId;
@@ -110,4 +110,24 @@ exports.getTeam = async (req, res, next) => {
   } catch (err) {
     handleError(err, next);
   }
-}
+};
+
+exports.deleteTeam = async (req, res, next) => {
+  const teamId = req.params.teamId;
+  try {
+    const team = await Team.findByPk(teamId);
+    if (!team) {
+      const error = new Error('Team not found');
+      error.statusCode = 404;
+      throw error;
+    }
+    await team.destroy();
+
+    res.status(200).json({
+      message: 'Team deleted successfully'
+    });
+    
+  } catch (err) {
+    handleError(err, next);
+  }
+};

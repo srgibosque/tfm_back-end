@@ -15,6 +15,7 @@ const Match = require('./models/match');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const teamRoutes = require('./routes/team');
+const leagueRoutes = require('./routes/league');
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use((req, res, next) => {
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/team', teamRoutes);
+app.use('/league', leagueRoutes);
 
 // Middleware error. Executes every time an error is thrown
 app.use((error, req, res, next) => {

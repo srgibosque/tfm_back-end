@@ -72,4 +72,4 @@ exports.signin = (req, res, next) => {
       })
     })
     .catch((err) => handleError(err, next));
-}
+};
