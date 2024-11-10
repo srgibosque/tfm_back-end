@@ -64,6 +64,7 @@ Match.belongsTo(Team, { foreignKey: 'homeTeamId', as: 'HomeTeam' });
 Match.belongsTo(Team, { foreignKey: 'awayTeamId', as: 'AwayTeam' });
 
 //Creates tables for your models
+// Delete alter:true in production
 sequelize
   .sync({ alter: true })
   .then(result => {

@@ -9,7 +9,21 @@ exports.createLeague = async (req, res, next) => {
 };
 
 exports.getTeamByTeamname = async (req, res, next) => {
-
+  const teamName = req.params.teamName;
+  try {
+    const team = await Team.findOne({ where: { userteamname: teamName } });
+    if (!team) {
+      const error = new Error('Team not found');
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({ 
+      message: 'Team successfully loaded to league',
+      team: team
+    });
+  } catch (err) {
+    handleError(err, next);
+  }
 };
 
 exports.updateLeague = async (req, res, next) => {
