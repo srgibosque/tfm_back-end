@@ -16,6 +16,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const teamRoutes = require('./routes/team');
 const leagueRoutes = require('./routes/league');
+const matchRoutes = require('./routes/match');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/team', teamRoutes);
 app.use('/league', leagueRoutes);
+app.use('/match',matchRoutes);
 
 // Middleware error. Executes every time an error is thrown
 app.use((error, req, res, next) => {
@@ -74,6 +76,3 @@ sequelize
   .catch(err => {
     console.error(err)
   });
-
-
-

@@ -10,11 +10,11 @@ const Match = sequelize.define('match', {
   },
   date: {
     type: Sequelize.DATE,
-    allowNull: false
+    allowNull: true
   },
   location: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   },
   homeTeamGoals: {
     type: Sequelize.INTEGER,
