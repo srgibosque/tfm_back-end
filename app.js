@@ -44,8 +44,8 @@ app.use((error, req, res, next) => {
 });
 
 //DATA RELATION
-User.belongsToMany(Team, { through: 'UserTeams' });
-Team.belongsToMany(User, { through: 'UserTeams' });
+User.belongsToMany(Team, { through: 'UserTeams', as: 'Teams' });
+Team.belongsToMany(User, { through: 'UserTeams', as: 'Users' });
 
 Team.belongsToMany(League, { through: 'TeamLeagues' });
 League.belongsToMany(Team, { through: 'TeamLeagues' });
