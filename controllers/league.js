@@ -134,3 +134,7 @@ exports.deleteLeague = async (req, res, next) => {
     handleError(err, next);
   }
 };
+
+exports.getLeaguesByUser = async (req, res, next) => {
+
+};

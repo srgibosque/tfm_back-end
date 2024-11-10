@@ -131,3 +131,7 @@ exports.deleteTeam = async (req, res, next) => {
     handleError(err, next);
   }
 };
+
+exports.getTeamsByUser = async (req, res, next) => {
+  
+};
