@@ -36,7 +36,7 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/team', teamRoutes);
 app.use('/league', leagueRoutes);
-app.use('/match',matchRoutes);
+app.use('/match', matchRoutes);
 
 // Middleware error. Executes every time an error is thrown
 app.use((error, req, res, next) => {
@@ -54,8 +54,8 @@ Team.belongsToMany(User, { through: 'UserTeams', as: 'Users' });
 Team.belongsToMany(League, { through: 'TeamLeagues' });
 League.belongsToMany(Team, { through: 'TeamLeagues' });
 
-League.hasMany(Match, { foreignKey: 'leagueId',  as: 'Matches' });
-Match.belongsTo(League, { foreignKey: 'leagueId' });
+League.hasMany(Match, { foreignKey: 'leagueId', as: 'Matches', onDelete: 'CASCADE' });
+Match.belongsTo(League, { foreignKey: 'leagueId', onDelete: 'CASCADE' });
 
 // Team participates in many matches as either home or away team
 Team.hasMany(Match, { foreignKey: 'homeTeamId', as: 'HomeMatches' });
