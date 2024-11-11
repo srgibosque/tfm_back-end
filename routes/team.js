@@ -10,6 +10,5 @@ router.get('/player/:email', isAuth, teamController.getPlayerByEmail);
 router.put('/:teamId', isAuth, teamController.updateTeam);
 router.get('/:teamId', isAuth, teamController.getTeam);
 router.delete('/:teamId', isAuth, teamController.deleteTeam);
-router.get('/', isAuth, teamController.getTeamsByUser);
 
 module.exports = router;

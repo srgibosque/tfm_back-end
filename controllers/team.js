@@ -98,11 +98,11 @@ exports.getTeam = async (req, res, next) => {
         }
       ]
     });
-    if(!team){
+    if (!team) {
       const error = new Error('Team not found');
       error.statusCode = 404;
       throw error;
-    } 
+    }
     res.status(200).json({
       message: 'Team retrieved successfully',
       team: team
@@ -126,12 +126,8 @@ exports.deleteTeam = async (req, res, next) => {
     res.status(200).json({
       message: 'Team deleted successfully'
     });
-    
+
   } catch (err) {
     handleError(err, next);
   }
-};
-
-exports.getTeamsByUser = async (req, res, next) => {
-  
 };

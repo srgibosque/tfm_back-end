@@ -2,7 +2,6 @@ const Team = require('../models/team');
 const League = require('../models/league');
 const Match = require('../models/match');
 const handleError = require('../util/error-handler');
-const duplicateUniqueValuesError = require('../util/duplicate-unique-values_error-handler');
 
 exports.createLeague = async (req, res, next) => {
   const { name, location, teamIds } = req.body;
@@ -114,7 +113,6 @@ exports.getLeague = async (req, res, next) => {
 };
 
 exports.deleteLeague = async (req, res, next) => {
-  // Make sure it deletes the matches associated with the league
   const leagueId = req.params.leagueId;
   try {
     const league = await League.findByPk(leagueId);
@@ -133,8 +131,4 @@ exports.deleteLeague = async (req, res, next) => {
   } catch (err) {
     handleError(err, next);
   }
-};
-
-exports.getLeaguesByUser = async (req, res, next) => {
-
 };

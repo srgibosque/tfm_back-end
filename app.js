@@ -51,8 +51,8 @@ app.use((error, req, res, next) => {
 User.belongsToMany(Team, { through: 'UserTeams', as: 'Teams' });
 Team.belongsToMany(User, { through: 'UserTeams', as: 'Users' });
 
-Team.belongsToMany(League, { through: 'TeamLeagues' });
-League.belongsToMany(Team, { through: 'TeamLeagues' });
+Team.belongsToMany(League, { through: 'TeamLeagues', as: 'Leagues' });
+League.belongsToMany(Team, { through: 'TeamLeagues', as: 'Teams' });
 
 League.hasMany(Match, { foreignKey: 'leagueId', as: 'Matches', onDelete: 'CASCADE' });
 Match.belongsTo(League, { foreignKey: 'leagueId', onDelete: 'CASCADE' });
@@ -68,7 +68,7 @@ Match.belongsTo(Team, { foreignKey: 'awayTeamId', as: 'AwayTeam' });
 //Creates tables for your models
 // Delete alter:true in production
 sequelize
-  .sync({ alter: true })
+  .sync({})
   .then(result => {
     console.log("Connected");
     app.listen(8080);

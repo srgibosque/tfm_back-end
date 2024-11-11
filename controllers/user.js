@@ -1,8 +1,10 @@
 const User = require('../models/user');
 const Team = require('../models/team');
+const League = require('../models/league');
 const handleError = require('../util/error-handler');
 
 exports.getProfile = async (req, res, next) => {
+  // Try to map the retrieved object and include matches
   const userId = req.userId;
   try {
     const user = await User.findByPk(userId, {
@@ -10,7 +12,15 @@ exports.getProfile = async (req, res, next) => {
       include: [
         {
           model: Team,
-          as: 'Teams'
+          as: 'Teams',
+          through: { attributes: [] },
+          include: [
+            {
+              model: League,
+              as: 'Leagues',
+              through: { attributes: [] }
+            }
+          ]
         }
       ]
     });
