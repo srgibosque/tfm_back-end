@@ -7,7 +7,6 @@ const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
 
 exports.getProfile = async (req, res, next) => {
-  // Try to map the retrieved object and include matches
   const userId = req.userId;
   try {
     const user = await User.findByPk(userId, {
@@ -47,7 +46,67 @@ exports.getProfile = async (req, res, next) => {
       throw error;
     }
 
-    res.status(200).json({ user });
+    const userData = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      gender: user.gender,
+      birthdate: user.birthdate,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    }
+    let teams = [];
+    let leagues = [];
+    const leagueIds = new Set();
+    let matches = [];
+
+    user.Teams.forEach(team => {
+      teams.push({
+        id: team.id,
+        name: team.name,
+        contactEmail: team.contact_email,
+        location: team.location,
+        userteamname: team.userteamname,
+      });
+
+      team.Leagues.forEach(league => {
+        if (leagueIds.has(league.id)) {
+          return;
+        }
+        leagueIds.add(league.id);
+        leagues.push({
+          id: league.id,
+          name: league.name,
+          location: league.location,
+          createdAt: league.createdAt,
+          updatedAt: league.updatedAt
+        });
+
+        league.Matches.forEach(match => {
+          matches.push({
+            id: match.id,
+            date: match.date,
+            location: match.location,
+            homeTeamGoals: match.homeTeamGoals,
+            awayTeamGoals: match.awayTeamGoals,
+            homeTeamId: match.homeTeamId,
+            awayTeamId: match.awayTeamId,
+            leagueId: match.leagueId,
+            createdAt: match.createdAt,
+            updatedAt: match.updatedAt
+          });
+        });
+      });
+    });
+
+    const transformedUser = {
+      userData: userData,
+      teams: teams,
+      leagues: leagues,
+      matches: matches
+    };
+
+    res.status(200).json({ user: transformedUser });
 
   } catch (err) {
     handleError(err, next);
