@@ -1,7 +1,10 @@
 const User = require('../models/user');
 const Team = require('../models/team');
 const League = require('../models/league');
+const Match = require('../models/match');
 const handleError = require('../util/error-handler');
+const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 
 exports.getProfile = async (req, res, next) => {
   // Try to map the retrieved object and include matches
@@ -18,7 +21,20 @@ exports.getProfile = async (req, res, next) => {
             {
               model: League,
               as: 'Leagues',
-              through: { attributes: [] }
+              through: { attributes: [] },
+              include: [
+                {
+                  model: Match,
+                  as: 'Matches',
+                  where: {
+                    [Op.or]: [
+                      { homeTeamId: Sequelize.col('Teams.id') },
+                      { awayTeamId: Sequelize.col('Teams.id') }
+                    ]
+                  },
+                  required: false,
+                }
+              ]
             }
           ]
         }
