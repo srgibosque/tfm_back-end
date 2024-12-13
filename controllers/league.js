@@ -92,6 +92,12 @@ exports.getLeague = async (req, res, next) => {
             { model: Team, as: 'HomeTeam', attributes: ['id', 'name'] },
             { model: Team, as: 'AwayTeam', attributes: ['id', 'name'] }
           ]
+        },
+        {
+          model: Team, 
+          as: 'Teams', 
+          attributes: ['id', 'name', 'contact_email', 'location'],
+          through: { attributes: [] }
         }
       ]
     });
