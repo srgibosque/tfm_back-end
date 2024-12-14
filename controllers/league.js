@@ -94,8 +94,8 @@ exports.getLeague = async (req, res, next) => {
           ]
         },
         {
-          model: Team, 
-          as: 'Teams', 
+          model: Team,
+          as: 'Teams',
           attributes: ['id', 'name', 'contact_email', 'location'],
           through: { attributes: [] }
         }
@@ -134,6 +134,46 @@ exports.deleteLeague = async (req, res, next) => {
     res.status(200).json({
       message: 'League deleted successfully'
     });
+  } catch (err) {
+    handleError(err, next);
+  }
+};
+
+exports.getTable = async (req, res, next) => {
+  const leagueId = req.params.leagueId;
+
+  try {
+    const matches = await Match.findAll({ where: { leagueId } });
+
+    const pointsTable = {};
+
+    matches.forEach(match => {
+      const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = match;
+
+      if (homeTeamGoals === null || awayTeamGoals === null) return;
+
+      if (!pointsTable[homeTeamId]) pointsTable[homeTeamId] = 0;
+      if (!pointsTable[awayTeamId]) pointsTable[awayTeamId] = 0;
+
+      if (homeTeamGoals > awayTeamGoals) {
+        pointsTable[homeTeamId] += 3; 
+      } else if (homeTeamGoals < awayTeamGoals) {
+        pointsTable[awayTeamId] += 3; 
+      } else {
+        pointsTable[homeTeamId] += 1;
+        pointsTable[awayTeamId] += 1; 
+      }
+    });
+
+    const leagueTable = Object.entries(pointsTable).map(([teamId, points]) => ({
+      teamId: parseInt(teamId),
+      points
+    }));
+
+    leagueTable.sort((a, b) => b.points - a.points);
+
+    res.status(200).json({ table: leagueTable });
+
   } catch (err) {
     handleError(err, next);
   }
