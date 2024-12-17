@@ -6,18 +6,19 @@ const handleError = require('../util/error-handler');
 exports.createLeague = async (req, res, next) => {
   const { name, location, teamIds } = req.body;
   try {
-    const createdLeague = await League.create({
-      name: name,
-      location: location,
-    });
-
+    
     const teams = await Team.findAll({ where: { id: teamIds } });
-
+    
     if (teams.length < 2) {
       const error = new Error('League should have at least two teams');
       error.statusCode = 400;
       throw error;
     }
+    
+    const createdLeague = await League.create({
+      name: name,
+      location: location,
+    });
 
     await createdLeague.addTeams(teams);
 
