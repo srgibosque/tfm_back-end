@@ -87,20 +87,22 @@ exports.getProfile = async (req, res, next) => {
         });
 
         league.Matches.forEach(match => {
-          matches.push({
-            id: match.id,
-            date: match.date,
-            location: match.location,
-            homeTeamGoals: match.homeTeamGoals,
-            awayTeamGoals: match.awayTeamGoals,
-            homeTeamId: match.homeTeamId,
-            awayTeamId: match.awayTeamId,
-            HomeTeam: match.HomeTeam,
-            AwayTeam: match.AwayTeam,
-            leagueId: match.leagueId,
-            createdAt: match.createdAt,
-            updatedAt: match.updatedAt
-          });
+          if(user.Teams.some(t => t.id === match.homeTeamId || t.id === match.awayTeamId)){
+            matches.push({
+              id: match.id,
+              date: match.date,
+              location: match.location,
+              homeTeamGoals: match.homeTeamGoals,
+              awayTeamGoals: match.awayTeamGoals,
+              homeTeamId: match.homeTeamId,
+              awayTeamId: match.awayTeamId,
+              HomeTeam: match.HomeTeam,
+              AwayTeam: match.AwayTeam,
+              leagueId: match.leagueId,
+              createdAt: match.createdAt,
+              updatedAt: match.updatedAt
+            });
+          }
         });
       });
     });
