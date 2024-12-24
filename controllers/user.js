@@ -32,6 +32,10 @@ exports.getProfile = async (req, res, next) => {
                     ]
                   },
                   required: false,
+                  include: [
+                    { model: Team, as: 'HomeTeam', attributes: ['id', 'name'] },
+                    { model: Team, as: 'AwayTeam', attributes: ['id', 'name'] }
+                  ]
                 }
               ]
             }
@@ -91,6 +95,8 @@ exports.getProfile = async (req, res, next) => {
             awayTeamGoals: match.awayTeamGoals,
             homeTeamId: match.homeTeamId,
             awayTeamId: match.awayTeamId,
+            HomeTeam: match.HomeTeam,
+            AwayTeam: match.AwayTeam,
             leagueId: match.leagueId,
             createdAt: match.createdAt,
             updatedAt: match.updatedAt
