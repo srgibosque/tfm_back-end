@@ -7,6 +7,12 @@ exports.createTeam = async (req, res, next) => {
   const { name, contactEmail, location, userTeamName, userIds } = req.body;
 
   try {
+    if (!userIds || userIds.length === 0) {
+      const error = new Error('A team must have at least one user');
+      error.statusCode = 400;
+      throw error;
+    }
+
     const createdTeam = await Team.create({
       name: name,
       contact_email: contactEmail,
@@ -62,6 +68,12 @@ exports.updateTeam = async (req, res, next) => {
   const { name, contactEmail, location, userIds } = req.body;
 
   try {
+    if (!userIds || userIds.length === 0) {
+      const error = new Error('A team must have at least one user');
+      error.statusCode = 400; 
+      throw error;
+    }
+
     const team = await Team.findByPk(teamId);
     if (!team) {
       const error = new Error('Team not found');
