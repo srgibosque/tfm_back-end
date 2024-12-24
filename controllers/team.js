@@ -8,7 +8,7 @@ exports.createTeam = async (req, res, next) => {
 
   try {
     if (!userIds || userIds.length === 0) {
-      const error = new Error('A team must have at least one user');
+      const error = new Error('A team must have at least one player');
       error.statusCode = 400;
       throw error;
     }
@@ -69,7 +69,7 @@ exports.updateTeam = async (req, res, next) => {
 
   try {
     if (!userIds || userIds.length === 0) {
-      const error = new Error('A team must have at least one user');
+      const error = new Error('A team must have at least one player');
       error.statusCode = 400; 
       throw error;
     }
