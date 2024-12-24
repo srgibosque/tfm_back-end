@@ -6,15 +6,15 @@ const handleError = require('../util/error-handler');
 exports.createLeague = async (req, res, next) => {
   const { name, location, teamIds } = req.body;
   try {
-    
+
     const teams = await Team.findAll({ where: { id: teamIds } });
-    
+
     if (teams.length < 2) {
       const error = new Error('League should have at least two teams');
       error.statusCode = 400;
       throw error;
     }
-    
+
     const createdLeague = await League.create({
       name: name,
       location: location,
@@ -144,9 +144,22 @@ exports.getTable = async (req, res, next) => {
   const leagueId = req.params.leagueId;
 
   try {
-    const matches = await Match.findAll({ where: { leagueId } });
+
+    const teams = await Team.findAll({
+      include: {
+        model: League,
+        as: 'Leagues',
+        where: { id: leagueId },
+        through: { attributes: [] } 
+      }
+    });
 
     const pointsTable = {};
+    teams.forEach(team => {
+      pointsTable[team.id] = 0; 
+    });
+
+    const matches = await Match.findAll({ where: { leagueId } });
 
     matches.forEach(match => {
       const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = match;
@@ -157,12 +170,12 @@ exports.getTable = async (req, res, next) => {
       if (!pointsTable[awayTeamId]) pointsTable[awayTeamId] = 0;
 
       if (homeTeamGoals > awayTeamGoals) {
-        pointsTable[homeTeamId] += 3; 
+        pointsTable[homeTeamId] += 3;
       } else if (homeTeamGoals < awayTeamGoals) {
-        pointsTable[awayTeamId] += 3; 
+        pointsTable[awayTeamId] += 3;
       } else {
         pointsTable[homeTeamId] += 1;
-        pointsTable[awayTeamId] += 1; 
+        pointsTable[awayTeamId] += 1;
       }
     });
 
