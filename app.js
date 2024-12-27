@@ -67,12 +67,15 @@ Match.belongsTo(Team, { foreignKey: 'awayTeamId', as: 'AwayTeam' });
 
 //Creates tables for your models
 // Delete alter:true in production
-sequelize
-  .sync({})
-  .then(result => {
+sequelize.
+  authenticate()
+  .then(() => sequelize.sync())
+  .then(() => {
     console.log("Connected");
-    app.listen(8080);
+    app.listen(process.env.APP_PORT, () => {
+      console.log(`Server is running on port ${process.env.APP_PORT}`);
+    });
   })
   .catch(err => {
-    console.error(err)
+    console.error('Database connection failed:', err)
   });

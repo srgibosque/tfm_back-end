@@ -63,7 +63,7 @@ exports.signin = (req, res, next) => {
         email: loadedUser.email
       },
         process.env.JWT_SECRET,
-        { expiresIn: '1h' }
+        { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
       );
       // Return the token to the client
       res.status(200).json({
