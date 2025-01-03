@@ -20,16 +20,18 @@ const matchRoutes = require('./routes/match');
 
 const app = express();
 
-// Middleware that parses JSON data from the client
-app.use(bodyParser.json()); // application/json
+app.use(cors());
 
 // We need to set the following headers to allow the communication between to diferent ports
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   next();
+// });
+
+// Middleware that parses JSON data from the client
+app.use(bodyParser.json()); // application/json
 
 // ROUTES middleware
 app.use('/auth', authRoutes);
